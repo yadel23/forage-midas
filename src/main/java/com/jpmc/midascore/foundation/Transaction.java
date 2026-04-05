@@ -1,8 +1,10 @@
 package com.jpmc.midascore.foundation;
-
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Component
 public class Transaction {
     private long senderId;
     private long recipientId;
@@ -44,5 +46,10 @@ public class Transaction {
     @Override
     public String toString() {
         return "Transaction {senderId=" + senderId + ", recipientId=" + recipientId + ", amount=" + amount + "}";
+    }
+
+    @KafkaListener(topics = "trader-updates")
+    public void listen(Transaction transaction) {
+        System.out.println("---------Kafka transaction toString() Received: " + transaction.toString());
     }
 }
